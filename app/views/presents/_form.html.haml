@@ -1,0 +1,9 @@
+= bootstrap_form_for @present , layout: :vertical do |f|
+  .container
+    = f.text_field :contents
+    = f.text_field :name_recepient
+    = f.text_field :elf_id
+    = f.select :status, ['Delivered', 'To be delivered', 'Lost']
+
+
+    = f.primary

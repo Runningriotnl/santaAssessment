@@ -1,0 +1,19 @@
+%h1= Present.model_name.human.singularize
+
+%dl.dl-horizontal
+  %dt= Present.human_attribute_name :contents
+  %dd= @present.contents
+%dl.dl-horizontal
+  %dt= Present.human_attribute_name :name_recepient
+  %dd= @present.name_recepient
+%dl.dl-horizontal
+  %dt= Present.human_attribute_name :elf_id
+  %dd= @present.elf_id
+%dl.dl-horizontal
+  %dt= Present.human_attribute_name :status
+  %dd= @present.status
+
+- if can? :update, @present
+  = link_to t('actions.edit'), edit_present_path(@present)
+  \|
+= link_to t('actions.back'), presents_path

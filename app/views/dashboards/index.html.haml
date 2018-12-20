@@ -1,0 +1,49 @@
+.row
+  .col.d-flex.align-items-center.justify-content-between
+    %h1= "Dashboard"
+.row
+  .col.d-flex.align-items-center.justify-content-between
+    %h2= "De Elven"
+
+    
+%table.table
+  %thead
+    %tr
+      %th= sort_link(@q, :first_name, Elf.human_attribute_name(:name))
+      %th= sort_link(@q, :speciality, Elf.human_attribute_name(:speciality))
+      %th= sort_link(@q, :presents_total, Elf.human_attribute_name(:number_of_presents))
+      %th= sort_link(@q, :presents_delivered, Elf.human_attribute_name(:number_of_presents_delivered))
+      %th= sort_link(@q, :presents_to_be_delivered, Elf.human_attribute_name(:number_of_presents_to_be_delivered))
+      %th= sort_link(@q, :presents_lost, Elf.human_attribute_name(:number_of_presents_lost))
+      %th{colspan: 3}
+
+  %tbody
+    - @elves.each do |elf|
+
+      - @delivered = 0
+      - @to_be_delivered = 0
+      - @lost = 0
+
+      - elf.presents.each do |present|
+        - if(present.status == "Delivered")
+          - @delivered += 1
+      
+        - if(present.status == "To be delivered")
+          - @to_be_delivered += 1
+      
+        - if(present.status == "Lost")
+          - @lost += 1
+      
+      
+      %tr
+        %td= elf.full_name
+        %td= elf.speciality
+        %td= elf.presents.count
+        %td= @delivered
+        %td= @to_be_delivered
+        %td= @lost
+
+        
+
+.pull-right
+  = paginate @elves

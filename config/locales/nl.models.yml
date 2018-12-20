@@ -1,0 +1,18 @@
+nl:
+  dictionary:
+    name: &name Name
+
+  activerecord:
+    models:
+      elf:
+        one: Elf
+        other: Elven
+      present:
+        one: Present
+        other: Presents
+
+    attributes:
+      user:
+        name: *name
+        date_of_birth: Geboortedatum
+        created_at: Lid sinds
