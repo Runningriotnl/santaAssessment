@@ -1,7 +1,15 @@
 %h1= Present.model_name.human(count: 2)
 .col.d-flex.align-items-center.justify-content-between
   %h1= "#{@presents.count} #{Present.model_name.human(count: @presents.count)}"
+  %h1 Search
+  = search_form_for @q do |f|
+    .field
+      =f.label :status_cont, "Status"
+      =f.select :status_matches, options_for_select(['Delivered', 'To be delivered', 'Lost'])
+      =f.submit "Filter"
   = link_to t('actions.create'), new_present_path, class: 'btn btn-primary'
+
+
 
 %table.table.table-striped
   %thead
@@ -17,12 +25,19 @@
       %tr
         %td= present.contents
         %td= present.name_recepient
-        %td= present.elf_id
+        %td= present.elf.first_name + " " + present.elf.last_name
         %td= present.status
 
-        %td.actions
-          = link_to t('actions.edit'), edit_present_path(present), class: 'btn btn-xs btn-light'
-          = link_to t('actions.delete'), present_path(present), { method: :delete, class: 'btn btn-xs btn-warning', data: { confirm: t('actions.delete_question')}}
+        - if (present.status != 'Lost')
+          %td.actions
+            = link_to t('actions.edit'), edit_present_path(present), class: 'btn btn-xs btn-light'
+            = link_to t('actions.delete'), present_path(present), { method: :delete, class: 'btn btn-xs btn-warning', data: { confirm: t('actions.delete_question')}}
+        - else
+          %td.actions
+            = link_to t('actions.resend'), new_present_path(present_contents: present.contents, present_name_recepient: present.name_recepient, present_elf_id: present.elf_id), class: 'btn btn-xs btn-dark'
+            = link_to t('actions.edit'), edit_present_path(present), class: 'btn btn-xs btn-light'
+            = link_to t('actions.delete'), present_path(present), { method: :delete, class: 'btn btn-xs btn-warning', data: { confirm: t('actions.delete_question')}}
+
 
 .row
   .col-sm-6

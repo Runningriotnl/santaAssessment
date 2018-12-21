@@ -15,7 +15,12 @@ class PresentsController < ApplicationController
   end
 
   def new
-    @present = Present.new
+    if(params[:contents] && params[:name_recepient])
+        @present = Present.find(params[:present_contents, :name_recepient, :elf_id])
+        @inspiration = Inspiration.find(params[:inspiration_id])
+    else
+      @present = Present.new
+    end
   end
 
   def edit

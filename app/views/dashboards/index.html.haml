@@ -6,44 +6,78 @@
     %h2= "De Elven"
 
     
-%table.table
+%table.table.table-striped
   %thead
     %tr
       %th= sort_link(@q, :first_name, Elf.human_attribute_name(:name))
       %th= sort_link(@q, :speciality, Elf.human_attribute_name(:speciality))
-      %th= sort_link(@q, :presents_total, Elf.human_attribute_name(:number_of_presents))
-      %th= sort_link(@q, :presents_delivered, Elf.human_attribute_name(:number_of_presents_delivered))
-      %th= sort_link(@q, :presents_to_be_delivered, Elf.human_attribute_name(:number_of_presents_to_be_delivered))
-      %th= sort_link(@q, :presents_lost, Elf.human_attribute_name(:number_of_presents_lost))
+      %th= "Number of presents"
+      %th= "Number of presents delivered"
+      %th= "Number of presents to be delivered"
+      %th= "Number of presents lost"
       %th{colspan: 3}
 
   %tbody
     - @elves.each do |elf|
 
-      - @delivered = 0
-      - @to_be_delivered = 0
-      - @lost = 0
+      - delivered = 0
+      - to_be_delivered = 0
+      - lost = 0
 
       - elf.presents.each do |present|
         - if(present.status == "Delivered")
-          - @delivered += 1
+          - delivered += 1
       
         - if(present.status == "To be delivered")
-          - @to_be_delivered += 1
+          - to_be_delivered += 1
       
         - if(present.status == "Lost")
-          - @lost += 1
+          - lost += 1
       
       
       %tr
         %td= elf.full_name
         %td= elf.speciality
-        %td= elf.presents.count
-        %td= @delivered
-        %td= @to_be_delivered
-        %td= @lost
+        %td= elf.presents.count.to_i
+        %td= delivered.to_i
+        %td= to_be_delivered.to_i
+        %td= lost.to_i
 
         
 
 .pull-right
   = paginate @elves
+
+
+.row
+  .col.d-flex.align-items-center.justify-content-between
+    %h2= "De Presents"
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th= sort_link(@q, :contents, Present.human_attribute_name(:contents))
+      %th= sort_link(@q, :name_recepient, Present.human_attribute_name(:name_recepient))
+      %th= sort_link(@q, :elf_id, Present.human_attribute_name(:elf_id))
+      %th= sort_link(@q, :status, Present.human_attribute_name(:status))
+      %th{colspan: 3}
+
+  %tbody
+    - @presents.each do |present|
+      %tr
+        %td= present.contents
+        %td= present.name_recepient
+        %td= present.elf.first_name + " " + present.elf.last_name
+        %td= present.status
+
+        - if (present.status == 'Lost')
+          %td.actions
+            = link_to t('actions.resend'), new_present_path(present_contents: present.contents, present_name_recepient: present.name_recepient, present_elf_id: present.elf_id), class: 'btn btn-xs btn-dark'
+        -else 
+          %td
+      
+.row
+  .col-sm-6
+  .col-sm-6
+    .pull-right
+      = paginate @presents
